@@ -1,0 +1,11 @@
+Requirement ID,Requirement Description,Module,Test Case ID,API Request,Validation Focus,Status
+REQ-API-001,User can create a customer record successfully,Customer,API-001,Create Customer,Status code response body customer ID persistence,Pass
+REQ-API-002,System prevents duplicate customer registration,Customer,API-002,Create Customer - Duplicate Email,Duplicate validation error handling,Pass
+REQ-API-003,User can create payment intent for valid customer,Payments,API-003,Create Payment Intent,Customer linkage amount currency payment intent creation,Pass
+REQ-API-004,User can confirm payment successfully,Payments,API-004,Confirm Payment,Payment confirmation status update successful processing,Pass
+REQ-API-005,System returns correct payment status,Payments,API-005,Get Payment Status,Payment retrieval status field integrity,Pass
+REQ-API-006,User can create subscription for valid customer,Billing,API-006,Create Subscription,Subscription creation plan status customer linkage,Pass
+REQ-API-007,System returns correct subscription details,Billing,API-007,Get Subscription,Subscription retrieval customer mapping subscription integrity,Pass
+REQ-API-008,System maintains chained IDs across funnel flow,E2E,API-008,Collection Variables,customer_id payment_intent_id subscription_id chaining,Pass
+REQ-API-009,System enforces authentication on protected endpoints,Security,API-009,All Protected Requests,Authorization header validation access control,Pass
+REQ-API-010,System preserves data integrity across onboarding payment and billing,E2E,API-010,Full API Flow,End-to-end consistency across customer payment subscription records,Pass
