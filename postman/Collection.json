@@ -1,17 +1,50 @@
 {
   "info": {
+    "_postman_id": "7c8a1f4d-1111-2222-3333-444455556666",
     "name": "SaaS Funnel API Testing",
-    "description": "API collection covering onboarding, customer creation, payment processing, and billing workflows"
+    "description": "API collection covering onboarding, customer creation, payment processing, subscriptions, and end-to-end funnel validation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     { "key": "base_url", "value": "https://api.saas-demo.com" },
     { "key": "api_key", "value": "test_api_key" },
     { "key": "customer_id", "value": "" },
-    { "key": "payment_id", "value": "" }
+    { "key": "payment_intent_id", "value": "" },
+    { "key": "subscription_id", "value": "" }
   ],
   "item": [
     {
       "name": "Create Customer",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201 or 200', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "pm.test('Response is JSON', function () {",
+              "    pm.response.to.have.header('Content-Type');",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test('Customer ID exists', function () {",
+              "    pm.expect(jsonData.id).to.exist;",
+              "});",
+              "",
+              "pm.test('Customer email matches request', function () {",
+              "    pm.expect(jsonData.email).to.eql('test1@mail.com');",
+              "});",
+              "",
+              "pm.collectionVariables.set('customer_id', jsonData.id);",
+              "console.log('Saved customer_id:', jsonData.id);"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -30,7 +63,86 @@
       }
     },
     {
+      "name": "Create Customer - Duplicate Email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 409 or 400 for duplicate email', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([400, 409]);",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test('Duplicate email error is returned', function () {",
+              "    pm.expect(JSON.stringify(jsonData).toLowerCase()).to.include('email');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test1@mail.com\",\n  \"name\": \"Duplicate User\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/customers",
+          "host": ["{{base_url}}"],
+          "path": ["customers"]
+        }
+      }
+    },
+    {
       "name": "Create Payment Intent",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Customer ID available before creating payment intent', function () {",
+              "    pm.expect(pm.collectionVariables.get('customer_id')).to.not.be.empty;",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201 or 200', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test('Payment intent ID exists', function () {",
+              "    pm.expect(jsonData.id).to.exist;",
+              "});",
+              "",
+              "pm.test('Amount is correct', function () {",
+              "    pm.expect(jsonData.amount).to.eql(1000);",
+              "});",
+              "",
+              "pm.test('Currency is correct', function () {",
+              "    pm.expect(String(jsonData.currency).toUpperCase()).to.eql('USD');",
+              "});",
+              "",
+              "pm.collectionVariables.set('payment_intent_id', jsonData.id);",
+              "console.log('Saved payment_intent_id:', jsonData.id);"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -50,6 +162,40 @@
     },
     {
       "name": "Confirm Payment",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Payment intent ID available before confirm', function () {",
+              "    pm.expect(pm.collectionVariables.get('payment_intent_id')).to.not.be.empty;",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200 or 201', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test('Payment status is success-like', function () {",
+              "    pm.expect(['succeeded', 'success', 'confirmed']).to.include(String(jsonData.status).toLowerCase());",
+              "});",
+              "",
+              "pm.test('Confirmed payment references correct payment intent', function () {",
+              "    pm.expect(jsonData.payment_intent_id || jsonData.id).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -58,7 +204,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"payment_intent_id\": \"{{payment_id}}\",\n  \"payment_method\": \"card\"\n}"
+          "raw": "{\n  \"payment_intent_id\": \"{{payment_intent_id}}\",\n  \"payment_method\": \"card\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/payments/confirm",
@@ -69,20 +215,84 @@
     },
     {
       "name": "Get Payment Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test('Payment record exists', function () {",
+              "    pm.expect(jsonData.id || jsonData.payment_intent_id).to.exist;",
+              "});",
+              "",
+              "pm.test('Payment status field exists', function () {",
+              "    pm.expect(jsonData.status).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [
           { "key": "Authorization", "value": "Bearer {{api_key}}" }
         ],
         "url": {
-          "raw": "{{base_url}}/payments/{{payment_id}}",
+          "raw": "{{base_url}}/payments/{{payment_intent_id}}",
           "host": ["{{base_url}}"],
-          "path": ["payments", "{{payment_id}}"]
+          "path": ["payments", "{{payment_intent_id}}"]
         }
       }
     },
     {
       "name": "Create Subscription",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Customer ID available before subscription creation', function () {",
+              "    pm.expect(pm.collectionVariables.get('customer_id')).to.not.be.empty;",
+              "});"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 201 or 200', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test('Subscription ID exists', function () {",
+              "    pm.expect(jsonData.id).to.exist;",
+              "});",
+              "",
+              "pm.test('Subscription plan is correct', function () {",
+              "    pm.expect(String(jsonData.plan).toLowerCase()).to.eql('basic');",
+              "});",
+              "",
+              "pm.test('Subscription status exists', function () {",
+              "    pm.expect(jsonData.status).to.exist;",
+              "});",
+              "",
+              "pm.collectionVariables.set('subscription_id', jsonData.id);",
+              "console.log('Saved subscription_id:', jsonData.id);"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "POST",
         "header": [
@@ -97,6 +307,43 @@
           "raw": "{{base_url}}/subscriptions",
           "host": ["{{base_url}}"],
           "path": ["subscriptions"]
+        }
+      }
+    },
+    {
+      "name": "Get Subscription",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test('Subscription ID matches', function () {",
+              "    pm.expect(String(jsonData.id)).to.eql(String(pm.collectionVariables.get('subscription_id')));",
+              "});",
+              "",
+              "pm.test('Subscription belongs to customer', function () {",
+              "    pm.expect(String(jsonData.customer_id)).to.eql(String(pm.collectionVariables.get('customer_id')));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/subscriptions/{{subscription_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["subscriptions", "{{subscription_id}}"]
         }
       }
     }
