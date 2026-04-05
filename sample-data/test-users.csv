@@ -1,0 +1,5 @@
+email,password,name,scenario
+test1@mail.com,Password123,Valid User,Positive
+test2@mail.com,Password123,Duplicate User,Duplicate Email
+invalid@mail,Password123,Invalid Email,Negative
+test3@mail.com,123,Weak Password,Validation
