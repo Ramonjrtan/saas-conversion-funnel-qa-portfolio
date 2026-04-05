@@ -1,0 +1,104 @@
+{
+  "info": {
+    "name": "SaaS Funnel API Testing",
+    "description": "API collection covering onboarding, customer creation, payment processing, and billing workflows"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://api.saas-demo.com" },
+    { "key": "api_key", "value": "test_api_key" },
+    { "key": "customer_id", "value": "" },
+    { "key": "payment_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create Customer",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test1@mail.com\",\n  \"name\": \"Test User\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/customers",
+          "host": ["{{base_url}}"],
+          "path": ["customers"]
+        }
+      }
+    },
+    {
+      "name": "Create Payment Intent",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 1000,\n  \"currency\": \"USD\",\n  \"customer_id\": \"{{customer_id}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/payment-intents",
+          "host": ["{{base_url}}"],
+          "path": ["payment-intents"]
+        }
+      }
+    },
+    {
+      "name": "Confirm Payment",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payment_intent_id\": \"{{payment_id}}\",\n  \"payment_method\": \"card\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/payments/confirm",
+          "host": ["{{base_url}}"],
+          "path": ["payments", "confirm"]
+        }
+      }
+    },
+    {
+      "name": "Get Payment Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/payments/{{payment_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["payments", "{{payment_id}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Subscription",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{api_key}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"{{customer_id}}\",\n  \"plan\": \"basic\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/subscriptions",
+          "host": ["{{base_url}}"],
+          "path": ["subscriptions"]
+        }
+      }
+    }
+  ]
+}
