@@ -1,0 +1,8 @@
+Requirement ID,Description,Test Case ID,Status
+REQ-001,User can sign up,TC-001,Pass
+REQ-002,Email verification works,TC-010,Pass
+REQ-003,User onboarding completes,TC-020,Pass
+REQ-004,API key generated,TC-030,Pass
+REQ-005,Payment processed successfully,TC-040,Pass
+REQ-006,Dashboard shows correct transaction,TC-050,Pass
+REQ-007,Billing updates correctly,TC-060,Pass
