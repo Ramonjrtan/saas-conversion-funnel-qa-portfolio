@@ -6,7 +6,15 @@ This project demonstrates how I test a SaaS conversion funnel for a Stripe-style
 
 The objective is to ensure users can move through the funnel without friction while maintaining data integrity, system reliability, and accurate business outcomes.
 
-This portfolio reflects how QA directly supports **conversion, activation, and revenue-critical workflows**.
+---
+
+## End-to-End System Flow (QA Perspective)
+
+![SaaS Funnel Diagram](images/funnel-diagram.png)
+
+User → UI → API → Backend → Database → Dashboard & Billing
+
+This diagram represents the end-to-end system flow I validate to ensure data integrity, transaction accuracy, and reliable business outcomes across the SaaS funnel.
 
 ---
 
