@@ -3,45 +3,58 @@
 ## Funnel Stages
 
 ### 1. Sign-Up
-User creates account using email and password.
+User creates an account using email and password.
 
 ### 2. Email Verification
-User verifies account through email link.
+User verifies the account through an email link.
 
 ### 3. Onboarding
-User completes business profile and setup.
+User completes business profile, setup, and initial configuration.
 
 ### 4. API Key Generation
-User generates API credentials for integration.
+User generates credentials for integration.
 
 ### 5. Sandbox / Testing
-User performs test transactions.
+User performs test transactions or technical validation before going live.
 
 ### 6. Payment Execution
-User processes real payment.
+User processes a real payment.
 
 ### 7. Dashboard Validation
-User views transaction details and status.
+User views transaction details, status, and business metrics.
 
 ### 8. Billing / Subscription
-User subscribes and manages billing.
+User subscribes, upgrades, renews, or manages billing.
 
 ---
 
 ## Critical Success Criteria
 
-- User can complete onboarding without errors
+- user can complete onboarding without blockers
 - API keys are generated correctly and securely
-- Payment results are accurate and consistent
-- Dashboard reflects real transaction data
-- Billing status is correct
+- payment results are accurate and consistent
+- dashboard reflects the real transaction state
+- billing status is correct and aligned with backend records
 
 ---
 
-## Drop-Off Risk Areas
+## Common Failure Points
 
-- Sign-up validation errors
-- Email not received
-- Onboarding complexity
-- API key confusion
-- Payment failures
+- sign-up validation errors block conversion early
+- email not received or link expires too soon
+- onboarding data is incomplete or not saved correctly
+- API key creation fails or creates confusion for activation
+- payment appears successful but backend / dashboard state is wrong
+- billing or subscription state does not match payment outcome
+
+---
+
+## Business Impact of Funnel Failures
+
+A broken SaaS funnel does not only create defects. It causes measurable business loss:
+- reduced sign-up completion
+- lower activation rates
+- failed payment conversion
+- subscription churn
+- poor customer trust
+- inaccurate business reporting

@@ -2,25 +2,26 @@
 
 ## Objective
 
-To validate the SaaS conversion funnel end-to-end, ensuring that users can successfully move from initial sign-up to successful payment and retention without system failures or data inconsistencies.
+To validate the SaaS conversion funnel end-to-end, ensuring that users can move from initial sign-up through payment and billing without workflow failures, hidden data issues, or inconsistent business outcomes.
 
 ---
 
 ## Scope
 
 ### In Scope
-- Sign-up and authentication
-- Email verification
-- Onboarding flow
+- sign-up and authentication
+- email verification
+- onboarding flow
 - API key generation
-- Payment processing
-- Billing and subscription
-- Dashboard validation
+- payment processing
+- billing and subscription state
+- dashboard validation
+- data consistency across UI, API, and backend
 
 ### Out of Scope
-- Third-party gateway internal logic
-- Performance testing (basic only)
-- Security penetration testing
+- third-party payment gateway internal logic
+- full-scale performance testing
+- penetration testing and deep security assessment
 
 ---
 
@@ -32,37 +33,42 @@ To validate the SaaS conversion funnel end-to-end, ensuring that users can succe
 - Regression Testing
 - API Testing
 - Negative Testing
+- Workflow / Business Outcome Validation
 
 ---
 
 ## Test Approach
 
-- Risk-based prioritization (focus on revenue-impact areas)
-- Validate full data flow (UI → API → DB → Output)
-- Cover both positive and negative scenarios
-- Validate edge cases and failure handling
+- prioritize high-risk, revenue-impact areas first
+- validate the full data flow: UI → API → backend → DB → output
+- cover both success and failure scenarios
+- validate retry, timeout, duplicate, and state-consistency behavior
+- check not only functional correctness but also business impact
 
 ---
 
 ## Entry Criteria
 
-- Requirements defined
-- Test data available
-- API endpoints accessible
+- requirements and core workflow are defined
+- test data is available
+- API endpoints are accessible
+- environment supports funnel execution and validation
 
 ---
 
 ## Exit Criteria
 
-- All critical test cases passed
-- No high severity defects open
-- Core funnel is stable and working end-to-end
+- all critical test cases passed
+- no open critical defects
+- no unresolved high-severity issues affecting payment, billing, or reporting truth
+- core funnel is stable and working end-to-end
 
 ---
 
-## Risks
+## High-Priority Risks
 
-- Payment failures causing revenue loss
-- Data inconsistency between API and UI
-- Duplicate transactions
-- Broken onboarding flow leading to user drop-off
+- payment failures causing revenue loss
+- duplicate transactions from retries or repeated actions
+- data inconsistency between API, UI, and dashboard
+- broken onboarding flow leading to conversion drop-off
+- billing state not matching actual transaction outcome

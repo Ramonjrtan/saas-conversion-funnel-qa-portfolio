@@ -2,27 +2,39 @@
 
 ## High Risk
 
-- Payment processing failure
-- Duplicate transactions
-- Incorrect billing status
-- API returning incorrect data
+- payment processing failure
+- duplicate transactions
+- incorrect billing status
+- API returning incorrect or incomplete data
+- report / dashboard mismatch with actual transaction state
 
 ## Medium Risk
 
-- Email verification delays
-- Onboarding data not saved
-- Dashboard mismatch
+- email verification delays or invalid timing behavior
+- onboarding data not saved correctly
+- delayed transaction status propagation
+- subscription update inconsistencies
 
 ## Low Risk
 
-- UI alignment issues
-- Minor validation messages
+- minor UI alignment issues
+- non-blocking validation message wording
+- cosmetic presentation defects
 
 ---
 
-## Mitigation
+## Why These Risks Matter
 
-- Prioritize E2E payment scenarios
-- Validate API responses vs UI data
-- Test retry and failure flows
-- Use test data for edge cases
+- duplicate charges can cause financial loss and customer disputes
+- billing state errors can damage trust and retention
+- incorrect dashboard figures reduce decision accuracy
+- onboarding friction directly lowers conversion
+
+---
+
+## Mitigation Approach
+
+- prioritize end-to-end payment and billing scenarios
+- validate API responses against UI and downstream output
+- test retry, timeout, and duplicate submission behavior
+- use positive and negative test data to surface edge cases early
