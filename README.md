@@ -157,17 +157,6 @@ Testing approach includes:
 
 ---
 
-## 💰 Premium QA System
-
-A fuller commercial version of this system can include:
-- full QA workbook bundle
-- filled sample project
-- QA guide / cheat sheet
-- fintech-specific scenarios
-- AI-assisted QA prompt pack
-
----
-
 ## 🧪 QA Audit Service
 
 I also use this approach as the basis for a lightweight QA audit service for:
