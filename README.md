@@ -166,8 +166,6 @@ A fuller commercial version of this system can include:
 - fintech-specific scenarios
 - AI-assisted QA prompt pack
 
-**Gumroad:** `[Add your Gumroad link here]`
-
 ---
 
 ## 🧪 QA Audit Service
